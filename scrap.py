@@ -1,22 +1,32 @@
 from lxml import html
 import requests
+import json
+import time
 
+while (True):
+    page = requests.get(
+        'https://mentalmars.com/game-news/borderlands-3-golden-keys/')
+    tree = html.fromstring(page.content)
 
-page = requests.get(
-    'https://mentalmars.com/game-news/borderlands-3-golden-keys/')
-tree = html.fromstring(page.content)
+    test = tree.xpath(
+        '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[3]')
 
-test = tree.xpath(
-    '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[3]')
+    reward = tree.xpath(
+        '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[1]/strong/text()')[0]
+    expire_date = tree.xpath(
+        '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[2]/text()')[0]
+    key = tree.xpath(
+        '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[3]/code/text()')[0]
 
-reward = tree.xpath(
-    '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[1]/strong/text()')
-expire_date = tree.xpath(
-    '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[2]/text()')
-last_key = tree.xpath(
-    '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[3]/code/text()')
+    last = {}
+    with open("last.json") as json_file:
+        last = json.load(json_file)
 
+    if last["key"] != key:
+        last["expire_date"] = expire_date
+        last["key"] = key
+        last["status"] = "pending"
+        with open("last.json", "w") as json_file:
+            json.dump(last, json_file, indent=4)
 
-print(reward)
-print(expire_date)
-print(last_key)
+    time.sleep(3600)
