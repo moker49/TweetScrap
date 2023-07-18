@@ -28,5 +28,7 @@ while (True):
         last["status"] = "pending"
         with open("last.json", "w") as json_file:
             json.dump(last, json_file, indent=4)
+        print("key updated")
 
+    print("waiting delay...")
     time.sleep(3600)
