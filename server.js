@@ -21,6 +21,7 @@ client.on("ready", () => {
 });
 
 function checkKey(){
+    console.log('sync')
     let data = fs.readFileSync("last.json", "utf-8");
 	let last = JSON.parse(data);
     if (last.status === 'pending'){
