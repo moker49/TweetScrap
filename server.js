@@ -17,14 +17,14 @@ client.login(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
     console.log(`${client.user.tag} online.`)
     shift_channel = client.channels.cache.find(c => c.id === SHIFT_CHANNEL_ID);
-    setInterval(checkKey, 60000);
+    setInterval(checkKey, 600000);
 });
 
 function checkKey(){
-    console.log('sync')
     let data = fs.readFileSync("last.json", "utf-8");
 	let last = JSON.parse(data);
     if (last.status === 'pending'){
+        console.log('syncing new tweet')
         sendMessage(last)
         updateKey(last)
     }
