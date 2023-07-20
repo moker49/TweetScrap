@@ -8,9 +8,6 @@ while (True):
         'https://mentalmars.com/game-news/borderlands-3-golden-keys/')
     tree = html.fromstring(page.content)
 
-    test = tree.xpath(
-        '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[3]')
-
     reward = tree.xpath(
         '//*[@id="gp-content"]/article/div[5]/figure[1]/table/tbody/tr[1]/td[1]/strong/text()')[0]
     expire_date = tree.xpath(

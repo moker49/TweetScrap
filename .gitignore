@@ -1,6 +1,7 @@
 # dev settings
 .vscode
 last.json
+channels.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
