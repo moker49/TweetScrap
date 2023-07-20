@@ -22,7 +22,7 @@ client.on("ready", () => {
 
     loadChannels()
     checkKey()
-    setInterval(checkKey, 600000);
+    setInterval(checkKey, process.env.COOLDOWN * 1000);
 });
 
 client.on("interactionCreate", (interaction) => {

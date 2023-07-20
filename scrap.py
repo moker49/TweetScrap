@@ -1,8 +1,13 @@
+from dotenv import load_dotenv
 from lxml import html
-import requests
 import json
+import os
+import requests
 import time
+load_dotenv()
+COOLDOWN = int(os.getenv('COOLDOWN'))
 
+print("Scraping running...")
 while (True):
     page = requests.get(
         'https://mentalmars.com/game-news/borderlands-3-golden-keys/')
@@ -27,5 +32,4 @@ while (True):
             json.dump(last, json_file, indent=4)
         print("key updated")
 
-    print("waiting delay...")
-    time.sleep(3600)
+    time.sleep(COOLDOWN)
