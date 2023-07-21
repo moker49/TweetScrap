@@ -13,7 +13,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
                 body: [
                     {
                         name: "shift",
-                        description: 'Toggle wether this channel is subscribed or not'
+                        description: 'Toggle wether this channel should receive new SHiFT codes'
                     }
                 ]
             }

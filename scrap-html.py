@@ -7,11 +7,6 @@ import time
 load_dotenv()
 COOLDOWN = int(int(os.getenv('COOLDOWN'))/2)
 
-
-def match_func(match):
-    return f"```{match.group().upper()}```"
-
-
 print("Scraping running...")
 while (True):
     with open("html.html", encoding='utf-8') as html_file:
@@ -28,12 +23,14 @@ while (True):
         expire_string = tree.xpath(f'{pre_xpath}div[{i}]{expire_xpath}')
         if (expire_string and 'Expire' in expire_string[0]):
             code = (tree.xpath(f'{pre_xpath}div[{i}]{post_xpath}')
-                    [0]).split('SHiFT code for')[1].strip().capitalize().replace('redeem', 'Redeem')
-            code = re.sub(r'(\w+-\w+-\w+-\w+-\w+)', match_func, code)
-            code = code.replace(
-                'in-game or at', 'in-game or [here](https://shift.gearboxsoftware.com/rewards).')
+                    [0]).split('SHiFT code for')[1].replace('free', '').replace('\n\n', '\n').strip()
+
+            message = code.split(':')[0]
+            key = re.findall(r'(\w+-\w+-\w+-\w+-\w+)', code)[0]
             expire = (expire_string[0]).split('.')[1].strip()
-            potential_new_keys.update({code: [expire, "pending"]})
+            status = 'pending'
+
+            potential_new_keys.update({key: [message, expire, status]})
         i = i + 1
 
     all_keys = {}
