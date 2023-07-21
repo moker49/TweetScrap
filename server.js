@@ -21,8 +21,8 @@ client.on("ready", () => {
     console.log(`${client.user.tag} online.`)
 
     loadChannels()
-    checkKey()
-    setInterval(checkKey, process.env.COOLDOWN * 1000);
+    checkKeys()
+    setInterval(checkKeys, process.env.COOLDOWN * 1000);
 });
 
 client.on("interactionCreate", (interaction) => {
@@ -49,9 +49,12 @@ client.on("interactionCreate", (interaction) => {
 
 
 
-function checkKey() {
-    let data = fs.readFileSync("last.json", "utf-8")
-    let last = JSON.parse(data)
+function checkKeys() {
+    let data = fs.readFileSync("all_keys.json", "utf-8")
+    let all_keys = JSON.parse(data)
+
+    // for key, value in all_keys:
+
     if (last.status === 'pending') {
         console.log('syncing new tweet')
         sendMessage(last)
