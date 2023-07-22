@@ -43,5 +43,6 @@ while (True):
 
     with open("all_keys.json", "w") as json_file:
         json.dump(all_keys, json_file, indent=4)
+    os.remove('html.html')
 
     time.sleep(COOLDOWN)
