@@ -6,6 +6,7 @@ import { Client, IntentsBitField, EmbedBuilder } from 'discord.js'
 const COLOR_SHIFT = 0xf4c310
 const COLOR_NEGATIVE = 0x992d22
 let channelIds
+let tags
 
 
 const client = new Client({
@@ -22,6 +23,7 @@ client.on("ready", () => {
     console.log(`${client.user.tag} online.`)
 
     loadChannels()
+    loadTags()
     checkKeys()
     setInterval(checkKeys, process.env.COOLDOWN * 1000);
 });
@@ -41,10 +43,18 @@ client.on("interactionCreate", (interaction) => {
             title = ':GoldenKey: Channel Unsubscribed!'
             embed_msg.setColor(COLOR_NEGATIVE);
         }
-        embed_msg.setTitle(title)
         saveChannels()
-        interaction.reply({ embeds: [embed_msg], ephemeral: true })
+    } else if (interaction.commandName === 'tag') {
+        let roleId = interaction.options.get('role')
+        title = `:GoldenKey: Role will tagged: ${roleId}`
+        embed_msg.setColor(COLOR_SHIFT);
+        saveTag(interaction.guildId, roleId)
+    } else{
+        title = ':GoldenKey: Command not found'
+        embed_msg.setColor(COLOR_NEGATIVE);
     }
+    embed_msg.setTitle(title)
+    interaction.reply({ embeds: [embed_msg], ephemeral: true })
 });
 
 
@@ -66,6 +76,25 @@ function checkKeys() {
     if (updated) {
         updateKeys(all_keys)
     }
+}
+
+function updateKeys(all_keys) {
+    fs.writeFileSync("all_keys.json", JSON.stringify(all_keys))
+}
+
+function loadTags(){
+    let data = fs.readFileSync("tags.json", "utf-8")
+    tags = JSON.parse(data)
+}
+
+function saveTag(guildId, roleId){
+    tags[guildId] = roleId
+    let json = JSON.stringify(tags);
+    fs.writeFile("tags.json", json, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
 }
 
 function loadChannels() {
@@ -94,10 +123,12 @@ function sendMessage(key, value) {
     channelIds.forEach(function (channelId) {
         let shift_channel = client.channels.cache.find(c => c.id === channelId)
         shift_channel.send({ embeds: [embed_msg] })
-        shift_channel.send('@SHiFT Codes');
+        if (shift_channel.guildId in tags) {
+            let roleId = tags[shift_channel.guildId]
+            shift_channel.send("<@&" + roleId);
+        } else {
+            console.log(`guild ${shift_channel.guild.name} does not have a tag set`)
+        }
     });
 }
 
-function updateKeys(all_keys) {
-    fs.writeFileSync("all_keys.json", JSON.stringify(all_keys))
-}
