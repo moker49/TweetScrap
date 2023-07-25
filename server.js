@@ -126,6 +126,7 @@ function sendMessage(key, value) {
     for (let guildId in guilds) {
         guilds[guildId].channelIds.forEach(function (channelId) {
             let shift_channel = client.channels.cache.find(c => c.id === channelId)
+            if (!shift_channel) { return }
             shift_channel.send({ embeds: [embed_msg] })
             guilds[guildId].roleIds.forEach(function (roleId) {
                 shift_channel.send("<@&" + roleId + ">");
