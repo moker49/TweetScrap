@@ -2,7 +2,6 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config()
 import { Client, IntentsBitField, EmbedBuilder } from 'discord.js'
-import { channel } from 'diagnostics_channel'
 
 const COLOR_SHIFT = 0xf4c310
 const COLOR_NEGATIVE = 0x992d22
