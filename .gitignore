@@ -4,6 +4,7 @@ channels.json
 all_keys.json
 role_ids.json
 html.html
+node_modules/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
