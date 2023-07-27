@@ -1,4 +1,4 @@
-## Script to save page on load
+# Save page on load
 ```js
 console.log("waiting to populate html")
 setTimeout(saveHtml, 5000)
@@ -23,8 +23,8 @@ function saveHtml(filename) {
 
 ```
 
-## Build any version of Node
-```
+# Build any version of Node
+```bash
 cd /usr/local/src
 wget http://nodejs.org/dist/latest/node-v7.2.1.tar.gz
 tar -xvzf node-v7.2.1.tar.gz
@@ -33,4 +33,53 @@ cd node-v7.2.1
 make
 sudo make install
 which node
+```
+
+# Register a service
+## Create a user that the service will run as
+```bash
+sudo adduser {username}
+# use any password, it will be removed in the next step
+sudo passwd -d {username}
+```
+## Modify the passwd file
+```
+# temporarily change the permission if needed
+# sudo chmod a=wrx /etc/passwd
+sudo nano /etc/passwd
+```
+```bash
+# in the following example, {username} is testusername
+
+# now change the last line from this format:
+testusername:x:1002:1003:,,,:/home/testusername:/bin/bash
+
+# to this format
+testusername:x:1002:1003::/home/testusername:/usr/sbin/nologin
+```
+## Create the service
+```bash
+sudo nano /etc/systemd/system/{name}.service
+```
+```bash
+# {name} is the bin executable
+
+[Unit]
+Description={fancy name}
+After=network.target
+
+[Service]
+Type=simple
+User={username}
+Group={group}
+ExecStart=/usr/bin/{name}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+## Register and enable the service
+```bash
+sudo systemctl enable {name}
+sudo systemctl start {name}
 ```
